@@ -57,7 +57,7 @@ const App = () => {
         {blog.author}
       </div>
       <div>
-        {blog.url}
+        <a href={blog.url}>{blog.url}</a>
       </div>
       {blog.likes} likes
     </div>
