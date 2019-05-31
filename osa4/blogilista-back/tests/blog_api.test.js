@@ -28,6 +28,54 @@ test('all blogs are returned', async () => {
   expect(response.body.length).toBe(helper.initialBlogs.length)
 })
 
+test('returned blog has id as identifier', async () => {
+  const response = await api.get('/api/blogs')
+
+  response.body.forEach((blog) => {
+    expect(blog.id).toBeDefined()
+  })
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Tommin pommiblogi',
+    author: 'Tommi Juslin',
+    url: 'www.tommipommiblogi.fi'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+  const contents = blogsAtEnd.map(n => n.title)
+  expect(contents).toContain(
+    'Tommin pommiblogi'
+  )
+})
+
+test('number of likes is set to 0 if not provided', async () => {
+  const newBlog = {
+    title: 'Tommin pommiblogi',
+    author: 'Tommi Juslin',
+    url: 'www.tommipommiblogi.fi'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd[helper.initialBlogs.length].likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

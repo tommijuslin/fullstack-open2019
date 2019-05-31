@@ -6,6 +6,7 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const [newLikes, setNewLikes] = useState('')
 
   useEffect(() => {
     blogService
@@ -27,6 +28,10 @@ const App = () => {
     setNewUrl(event.target.value)
   }
 
+  const handleLikesChange = (event) => {
+    setNewLikes(event.target.value)
+  }
+
   const addBlog = (event) => {
     event.preventDefault()
 
@@ -34,7 +39,7 @@ const App = () => {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      likes: 0,
+      likes: newLikes
     }
 
     blogService
@@ -46,6 +51,7 @@ const App = () => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
+    setNewLikes('')
   }
 
   const rows = () => blogs.map(blog =>
@@ -59,7 +65,9 @@ const App = () => {
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>
-      {blog.likes} likes
+      <div>
+        {blog.likes} likes
+      </div>
     </div>
   )
 
@@ -71,6 +79,7 @@ const App = () => {
         <div>title: <input value={newTitle} onChange={handleTitleChange} /></div>
         <div>author: <input value={newAuthor} onChange={handleAuthorChange} /></div>
         <div>url: <input value={newUrl} onChange={handleUrlChange} /></div>
+        <div>likes: <input value={newLikes} onChange={handleLikesChange} /></div>
         <div>
           <button type="submit">add</button>
         </div>
