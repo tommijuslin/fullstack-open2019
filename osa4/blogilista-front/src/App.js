@@ -54,20 +54,18 @@ const App = () => {
     setNewLikes('')
   }
 
+  const deleteBlog = (id) => {
+    blogService.remove(id)
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   const rows = () => blogs.map(blog =>
     <div key={blog.title}>
-      <div>
-        <h2>{blog.title}</h2>
-      </div>
-      <div>
-        {blog.author}
-      </div>
-      <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
-        {blog.likes} likes
-      </div>
+      <div><h2>{blog.title}</h2></div>
+      <div>{blog.author}</div>
+      <div><a href={blog.url}>{blog.url}</a></div>
+      <div>{blog.likes} likes</div>
+      <div><button onClick={() => deleteBlog(blog.id)}>delete</button></div>
     </div>
   )
 

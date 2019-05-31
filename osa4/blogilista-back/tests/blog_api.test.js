@@ -76,6 +76,18 @@ test('number of likes is set to 0 if not provided', async () => {
   expect(blogsAtEnd[helper.initialBlogs.length].likes).toBe(0)
 })
 
+test('return status code 400 if title and url are not provided', async () => {
+  const newBlog = {
+    title: 'Tommin pommiblogi',
+    author: 'Tommi Juslin',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
