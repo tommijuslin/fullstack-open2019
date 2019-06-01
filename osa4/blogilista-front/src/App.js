@@ -59,13 +59,28 @@ const App = () => {
     setBlogs(blogs.filter(blog => blog.id !== id))
   }
 
+  const likeBlog = (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+
+    const changedBlog = { ...blog, likes: blog.likes + 1 }
+
+    blogService
+      .update(id, changedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog.data))
+      })
+  }
+
   const rows = () => blogs.map(blog =>
     <div key={blog.title}>
       <div><h2>{blog.title}</h2></div>
       <div>{blog.author}</div>
       <div><a href={blog.url}>{blog.url}</a></div>
       <div>{blog.likes} likes</div>
-      <div><button onClick={() => deleteBlog(blog.id)}>delete</button></div>
+      <div>
+        <button onClick={() => deleteBlog(blog.id)}>delete</button>
+        <button onClick={() => likeBlog(blog.id)}>like</button>
+      </div>
     </div>
   )
 
