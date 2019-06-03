@@ -3,6 +3,60 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const CreateBlog = ({ blogs, setBlogs }) => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
+
+  const handleTitleChange = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setNewUrl(event.target.value)
+  }
+
+
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+      })
+
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+  }
+
+  return (
+  <div>
+    <h2>create new</h2>
+
+    <form onSubmit={addBlog}>
+      <div>title: <input value={newTitle} onChange={handleTitleChange} /></div>
+      <div>author: <input value={newAuthor} onChange={handleAuthorChange} /></div>
+      <div>url: <input value={newUrl} onChange={handleUrlChange} /></div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  </div>
+  )
+}
+
 const Notification = ({ message }) => {
   if (message === null) {
     return null
@@ -107,6 +161,8 @@ const App = () => {
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
+
+        <CreateBlog blogs={blogs} setBlogs={setBlogs} />
       </div>
     )
   }
