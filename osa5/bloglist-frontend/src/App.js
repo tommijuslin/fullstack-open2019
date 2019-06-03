@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
-const CreateBlog = ({ blogs, setBlogs }) => {
+const CreateBlog = ({ blogs, setBlogs, setErrorMessage }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -20,7 +21,6 @@ const CreateBlog = ({ blogs, setBlogs }) => {
     setNewUrl(event.target.value)
   }
 
-
   const addBlog = (event) => {
     event.preventDefault()
 
@@ -34,6 +34,22 @@ const CreateBlog = ({ blogs, setBlogs }) => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setErrorMessage({
+          text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          state: 'info'
+        })
+        setTimeout(() => {
+          setErrorMessage({ text: null, state: null })
+        }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage({
+          text: error.response.data.error,
+          state: 'error'
+        })
+        setTimeout(() => {
+          setErrorMessage({ text: null })
+        }, 5000)
       })
 
     setNewTitle('')
@@ -57,13 +73,13 @@ const CreateBlog = ({ blogs, setBlogs }) => {
   )
 }
 
-const Notification = ({ message }) => {
+const Notification = ({ message, state }) => {
   if (message === null) {
     return null
   }
 
   return (
-    <div className="error">
+    <div className={state}>
       {message}
     </div>
   )
@@ -71,7 +87,7 @@ const Notification = ({ message }) => {
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState({ text: null, state: null })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -106,9 +122,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('invalid username or password')
+      setErrorMessage({
+        text: 'invalid username or password',
+        state: 'error'
+      })
       setTimeout(() => {
-        setErrorMessage(null)
+        setErrorMessage({ text: null, state: null })
       }, 5000)
     }
   }
@@ -116,12 +135,19 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+    setErrorMessage({
+      text: `You have been logged out`,
+      state: 'info'
+    })
+    setTimeout(() => {
+      setErrorMessage({ text: null, state: null })
+    }, 5000)
   }
 
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification message={errorMessage.text} state={errorMessage.state} />
 
         <h2>Log in to application</h2>
 
@@ -151,7 +177,7 @@ const App = () => {
   } else {
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification message={errorMessage.text} state={errorMessage.state} />
 
         <p>{user.name} logged in</p>
 
@@ -162,7 +188,7 @@ const App = () => {
           <Blog key={blog.id} blog={blog} />
         )}
 
-        <CreateBlog blogs={blogs} setBlogs={setBlogs} />
+        <CreateBlog blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} />
       </div>
     )
   }
