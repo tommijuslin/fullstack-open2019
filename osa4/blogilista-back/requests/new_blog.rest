@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRqdXNsaW4iLCJpZCI6IjVjZjIzNzhkYTJiYzVkMzM5NDUzNzgyNCIsImlhdCI6MTU1OTM4MjA1OX0.mkWSQ2pEhRV-gEnoUbTinHUSBxeV-1f2IekksOyMi-Y
 
 {
-  "title": "Jaska Jokusen blogi",
-  "author": "Jaska Jokunen",
-  "url": "jaskanblogi.com"
+  "title": "Blogiigigigi",
+  "author": "Tommi Juslin",
+  "url": "www.blbgobgobgo.com"
 }
