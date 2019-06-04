@@ -194,6 +194,7 @@ const App = () => {
             blog={blog}
             blogs={blogs}
             setBlogs={setBlogs}
+            setErrorMessage={setErrorMessage}
           />
         )}
       </div>

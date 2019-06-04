@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, setErrorMessage }) => {
   const [blogAppearance, setBlogAppearance] = useState(false)
 
   const blogStyle = {
@@ -25,8 +25,22 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   }
 
   const removeBlog = (id) => {
-    blogService.remove(id)
-    setBlogs(blogs.filter(blog => blog.id !== id))
+    const blogToRemove = blogs.find(blog => blog.id === id)
+
+    if (window.confirm(`remove blog ${blogToRemove.title} by ${blogToRemove.author}?`)) {
+      blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+
+      setErrorMessage({
+        text: `Removed ${blogToRemove.title} by ${blogToRemove.author}`,
+        state: 'info'
+      })
+      setTimeout(() => {
+        setErrorMessage({ text: null })
+      }, 5000)
+    }
+
+
   }
 
   const showAllBlogInfo = () => (
