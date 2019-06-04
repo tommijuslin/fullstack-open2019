@@ -24,6 +24,11 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       })
   }
 
+  const removeBlog = (id) => {
+    blogService.remove(id)
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   const showAllBlogInfo = () => (
     <div>
       <div>
@@ -36,6 +41,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       <div>
         added by {blog.user.name}
       </div>
+      <button onClick={() => removeBlog(blog.id)}>remove</button>
     </div>
   )
 
