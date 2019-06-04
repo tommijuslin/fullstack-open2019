@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs }) => {
   const [blogAppearance, setBlogAppearance] = useState(false)
 
   const blogStyle = {
@@ -11,6 +12,18 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
+  const likeBlog = (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+
+    const changedBlog = { ...blog, likes: blog.likes + 1 }
+
+    blogService
+      .update(id, changedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog.data))
+      })
+  }
+
   const showAllBlogInfo = () => (
     <div>
       <div>
@@ -18,7 +31,7 @@ const Blog = ({ blog }) => {
       </div>
       <div>
         {blog.likes} likes
-        <button onClick={() => console.log('blog liked')}>like</button>
+        <button onClick={() => likeBlog(blog.id)}>like</button>
       </div>
       <div>
         added by {blog.user.name}
