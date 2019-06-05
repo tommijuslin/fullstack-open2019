@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import BlogForm from './components/BlogForm';
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -71,7 +71,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     setErrorMessage({
-      text: `You have been logged out`,
+      text: 'You have been logged out',
       state: 'info'
     })
     setTimeout(() => {
@@ -155,7 +155,7 @@ const App = () => {
         <form onSubmit={handleLogin}>
           <div>
             username
-              <input
+            <input
               type='text'
               value={username}
               name='Username'
@@ -164,7 +164,7 @@ const App = () => {
           </div>
           <div>
             password
-              <input
+            <input
               type='password'
               value={password}
               name='Password'

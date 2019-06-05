@@ -49,7 +49,7 @@ const Blog = ({ blog, blogs, setBlogs, setErrorMessage, username }) => {
         </div>
         <div>
           {blog.likes} likes
-        <button onClick={() => likeBlog(blog.id)}>like</button>
+          <button onClick={() => likeBlog(blog.id)}>like</button>
         </div>
         <div>
           added by {blog.user.name}
