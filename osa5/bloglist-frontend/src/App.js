@@ -195,6 +195,7 @@ const App = () => {
             blogs={blogs}
             setBlogs={setBlogs}
             setErrorMessage={setErrorMessage}
+            username={user.username}
           />
         )}
       </div>

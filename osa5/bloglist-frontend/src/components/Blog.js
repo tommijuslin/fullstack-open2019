@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, setErrorMessage }) => {
+const Blog = ({ blog, blogs, setBlogs, setErrorMessage, username }) => {
   const [blogAppearance, setBlogAppearance] = useState(false)
 
   const blogStyle = {
@@ -39,25 +39,30 @@ const Blog = ({ blog, blogs, setBlogs, setErrorMessage }) => {
         setErrorMessage({ text: null })
       }, 5000)
     }
-
-
   }
 
-  const showAllBlogInfo = () => (
-    <div>
+  const showAllBlogInfo = () => {
+    return (
       <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
-        {blog.likes} likes
+        <div>
+          <a href={blog.url}>{blog.url}</a>
+        </div>
+        <div>
+          {blog.likes} likes
         <button onClick={() => likeBlog(blog.id)}>like</button>
+        </div>
+        <div>
+          added by {blog.user.name}
+        </div>
+        {
+          blog.user.username === username ?
+            <button onClick={() => removeBlog(blog.id)}>remove</button>
+            : []
+        }
       </div>
-      <div>
-        added by {blog.user.name}
-      </div>
-      <button onClick={() => removeBlog(blog.id)}>remove</button>
-    </div>
-  )
+    )
+
+  }
 
   return (
     <div style={blogStyle}>
