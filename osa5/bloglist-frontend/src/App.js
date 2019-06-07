@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useField } from './hooks'
 import './index.css'
 
 const Notification = ({ message, state }) => {
@@ -20,13 +21,16 @@ const Notification = ({ message, state }) => {
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState({ text: null, state: null })
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [blogFormVisible, setBlogFormVisible] = useState(false)
+
+  const kayttaja = useField('text')
+  const salasana = useField('password')
+
+  const blogTitle = useField('text')
+  const blogAuthor = useField('text')
+  const blogUrl = useField('text')
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -44,6 +48,8 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
+    const username = kayttaja.value
+    const password = salasana.value
     try {
       const user = await loginService.login({
         username, password
@@ -54,8 +60,8 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      salasana.reset()
+      kayttaja.reset()
     } catch (exception) {
       setErrorMessage({
         text: 'invalid username or password',
@@ -83,9 +89,9 @@ const App = () => {
     event.preventDefault()
 
     const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
+      title: blogTitle.value,
+      author: blogAuthor.value,
+      url: blogUrl.value
     }
 
     blogService
@@ -110,9 +116,9 @@ const App = () => {
         }, 5000)
       })
 
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    blogTitle.reset()
+    blogAuthor.reset()
+    blogUrl.reset()
   }
 
   const blogForm = () => {
@@ -126,12 +132,9 @@ const App = () => {
         </div>
         <div style={showWhenVisible}>
           <BlogForm
-            newTitle={newTitle}
-            newAuthor={newAuthor}
-            newUrl={newUrl}
-            handleTitleChange={({ target }) => setNewTitle(target.value)}
-            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-            handleUrlChange={({ target }) => setNewUrl(target.value)}
+            blogTitle={blogTitle}
+            blogAuthor={blogAuthor}
+            blogUrl={blogUrl}
             addBlog={addBlog}
           />
           <button onClick={() => setBlogFormVisible(false)}>cancel</button>
@@ -153,24 +156,12 @@ const App = () => {
         <h2>Log in to application</h2>
 
         <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
-              type='text'
-              value={username}
-              name='Username'
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type='password'
-              value={password}
-              name='Password'
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
+          username
+          <input {...kayttaja} reset='null' />
+          <br/>
+          password
+          <input {...salasana} reset='null' />
+          <br/>
           <button type='submit'>log in</button>
         </form>
       </div>

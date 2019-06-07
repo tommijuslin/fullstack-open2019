@@ -65,7 +65,7 @@ const Blog = ({ blog, blogs, setBlogs, setErrorMessage, username }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <div onClick={() => setBlogAppearance(!blogAppearance)}>
         {blog.title} {blog.author}
 
