@@ -20,7 +20,7 @@ const AnecdoteList = (props) => {
             props.vote(anecdote.id);
             props.showNotification(`you voted '${anecdote.content}'`);
             setTimeout(() => {
-              props.hideNotification(null)
+              props.hideNotification()
             }, 5000)
           }
           }>vote</button>
