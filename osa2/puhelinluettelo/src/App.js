@@ -32,7 +32,7 @@ const Persons = ({ persons, setPersons, personsToShow, setMessage }) => {
       setPersons(persons.filter(person => person.id !== id))
 
       setMessage({
-        text: `Poistettiin '${personToDelete.name}'`,
+        text: `Poistettiin '${personToDelete.name}`,
         state: 'info'
       })
       setTimeout(() => {
