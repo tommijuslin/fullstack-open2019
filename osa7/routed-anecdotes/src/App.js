@@ -8,6 +8,10 @@ const Menu = ({ anecdotes }) => {
   const padding = {
     paddingRight: 5
   }
+
+  const anecdoteById = (id) => 
+    anecdotes.find(anecdote => anecdote.id === id)
+
   return (
     <div>
       <Router>
@@ -18,6 +22,8 @@ const Menu = ({ anecdotes }) => {
             <Link style={padding} to="/about">about</Link>
           </div>
           <Route exact path="/" render={() => <AnecdoteList anecdotes={anecdotes} />} />
+          <Route path="/anecdotes/:id" render={({ match }) =>
+            <Anecdote anecdote={anecdoteById(match.params.id)} />} />
           <Route path="/create" render={() => <CreateNew />} />
           <Route path="/about" render={() => <About />} />
         </div>
@@ -30,10 +36,24 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote =>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>)}
     </ul>
   </div>
 )
+
+const Anecdote = ({ anecdote }) => {
+  return (
+    <div>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
+      <div>has {anecdote.votes} votes</div>
+      <div>for more info see <a href={anecdote.info}>{anecdote.info}</a></div>
+      <br />
+    </div>
+  )
+}
 
 const About = () => (
   <div>
