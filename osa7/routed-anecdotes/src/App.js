@@ -3,13 +3,14 @@ import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
+import CreateNew from './CreateNew'
 
-const Menu = ({ anecdotes }) => {
+const Menu = ({ anecdotes, addNew }) => {
   const padding = {
     paddingRight: 5
   }
 
-  const anecdoteById = (id) => 
+  const anecdoteById = (id) =>
     anecdotes.find(anecdote => anecdote.id === id)
 
   return (
@@ -24,7 +25,7 @@ const Menu = ({ anecdotes }) => {
           <Route exact path="/" render={() => <AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/anecdotes/:id" render={({ match }) =>
             <Anecdote anecdote={anecdoteById(match.params.id)} />} />
-          <Route path="/create" render={() => <CreateNew />} />
+          <Route path="/create" render={() => <CreateNew addNew={addNew} />} />
           <Route path="/about" render={() => <About />} />
         </div>
       </Router>
@@ -50,7 +51,6 @@ const Anecdote = ({ anecdote }) => {
       <h2>{anecdote.content} by {anecdote.author}</h2>
       <div>has {anecdote.votes} votes</div>
       <div>for more info see <a href={anecdote.info}>{anecdote.info}</a></div>
-      <br />
     </div>
   )
 }
@@ -77,43 +77,16 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
+const Notification = ({ notification }) => {
+  if (notification === null) {
+    return null
   }
 
   return (
     <div>
-      <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
-      </form>
+      {notification}
     </div>
   )
-
 }
 
 const App = () => {
@@ -134,11 +107,15 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -158,10 +135,16 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} />
-      <Footer />
+
+      <Notification notification={notification} />
+
+      <Menu anecdotes={anecdotes} addNew={addNew} />
+      <div>
+        <br />
+        <Footer />
+      </div>
     </div>
   )
 }
 
-export default App;
+export default App
